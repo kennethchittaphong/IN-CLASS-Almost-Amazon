@@ -37,7 +37,8 @@ const getSingleAuthor = (authorId) => new Promise((resolve, reject) => {
 });
 
 // FIXME: DELETE AUTHOR
-const deleteSingleAuthor = (firebaseKey) => new Promise((resolve, reject) => {
+// eslint-disable-next-line no-unused-vars
+const deleteSingleAuthor = (firebaseKey, authorId) => new Promise((resolve, reject) => {
   axios.delete(`${dbUrl}/authors/${firebaseKey}.json`)
     .then(() => {
       getAuthors().then((authorsArr) => resolve(authorsArr));
@@ -59,6 +60,15 @@ const getAuthorBooks = (firebaseKey) => new Promise((resolve, reject) => {
     .catch((error) => reject(error));
 });
 
+// FAVORITE AUTHORS
+const favoriteAuthors = (uid) => new Promise((resolve, reject) => {
+  getAuthors(uid)
+    .then((userAuthors) => {
+      const favAuthors = userAuthors.filter((author) => author.favorite); // filter uid authors that are favorited
+      resolve(favAuthors);
+    }).catch((error) => reject(error));
+});
+
 export {
   getAuthors,
   createAuthor,
@@ -66,4 +76,5 @@ export {
   deleteSingleAuthor,
   updateAuthor,
   getAuthorBooks,
+  favoriteAuthors
 };
