@@ -1,19 +1,29 @@
 import signOut from '../helpers/auth/signOut';
+import { booksOnSale, getBooks } from '../../api/bookData';
+import { showBooks } from '../components/pages/books';
+import { showAuthors } from '../components/pages/authors';
+import { getAuthors, favoriteAuthors } from '../../api/authorData';
 
 // navigation events
-const navigationEvents = () => {
+const navigationEvents = (uid) => {
   // LOGOUT BUTTON
   document.querySelector('#logout-button')
     .addEventListener('click', signOut);
 
   // TODO: BOOKS ON SALE
   document.querySelector('#sale-books').addEventListener('click', () => {
-    console.warn('CLICKED SALE BOOKS');
+    booksOnSale(uid).then((saleBooksArray) => showBooks(saleBooksArray));
   });
 
   // TODO: ALL BOOKS
   document.querySelector('#all-books').addEventListener('click', () => {
-    console.warn('CLICKED ALL BOOKS');
+    // eslint-disable-next-line no-console
+    console.log('all book click ===', uid);
+    getBooks(uid).then((booksArray) => {
+      // eslint-disable-next-line no-console
+      console.log('all book booksArray ===', booksArray);
+      showBooks(booksArray);
+    });
   });
 
   // FIXME: STUDENTS Create an event listener for the Authors
@@ -21,7 +31,12 @@ const navigationEvents = () => {
   // 2. Convert the response to an array because that is what the makeAuthors function is expecting
   // 3. If the array is empty because there are no authors, make sure to use the emptyAuthor function
   document.querySelector('#authors').addEventListener('click', () => {
-    console.warn('CLICKED AUTHORS');
+    getAuthors(uid).then(() => showAuthors());
+  });
+
+  // FAVORITE AUTHORS
+  document.querySelector('#favorite-authors').addEventListener('click', () => {
+    favoriteAuthors(uid).then((authorsArray) => showAuthors(authorsArray));
   });
 
   // STRETCH: SEARCH
